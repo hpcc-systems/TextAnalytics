@@ -1,0 +1,107 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="indexsearch" default="clean">
+		<property environment="env"/>
+       <property name="destdir" value="dest" />
+       <property name="tomcatRootdir" value="${env.TOMCAT_HOME}" />
+       <property name="indexsearch" value="indexsearch.war"/>
+
+		
+       <target name="clean">
+              <delete file="${destdir}/warFiles/${indexsearch}"/>
+              <delete file="${destdir}/jarFiles/indexsearch.jar"/>
+              <delete dir="${tomcatRootdir}/webapps/indexsearch"/>
+              <mkdir dir="${destdir}"/>
+              <mkdir dir="${destdir}/warFiles"/>
+       </target>
+
+       <target name="build.jar">
+              <jar destfile="${destdir}/jarFiles/indexsearch.jar">
+                           <fileset dir="build/classes">
+                              <include name="org/hpcc/indexsearch/*.class"/>
+                              <include name="org/hpcc/indexsearch/util/*.class"/>
+                           </fileset>
+                     </jar>
+              </target>
+       <target name="build.localdev.war" depends="build.jar">
+              <jar destfile="${destdir}/jarFiles/indexsearch.jar">
+                     <fileset dir="build/classes">
+                        <include name="org/hpcc/indexsearch/*.class"/>
+                        <include name="org/hpcc/indexsearch/util/*.class"/>                     	
+                     </fileset>
+              </jar>
+              
+              <war destfile="${destdir}/warFiles/${indexsearch}" webxml="config/web.xml">        
+                     <lib file="${destdir}/jarFiles/indexsearch.jar"/>
+                     <lib file="lib/*.jar"/>
+                     <fileset dir="web/">
+                     </fileset>
+	           
+                     
+                     <metainf file="config/context.xml" />
+                     <classes file="config/logging.properties"/>
+              </war>
+       </target>
+	<target name="build.integration.war" depends="build.jar">
+	              <jar destfile="${destdir}/jarFiles/indexsearch.jar">
+	                     <fileset dir="build/classes">
+	                        <include name="com/hpcc/indexsearch/*.class"/>
+	                        <include name="com/hpcc/indexsearch/util/*.class"/>
+	                     	
+	                     </fileset>
+	              </jar>
+	              
+	              <war destfile="${destdir}/warFiles/${indexsearch}" webxml="config/integration/web.xml">        
+	                     <lib file="${destdir}/jarFiles/indexsearch.jar"/>
+	                     <lib file="lib/*.jar"/>
+	                     <fileset dir="web/">
+	                     </fileset>
+		      
+	                     
+	                     <metainf file="config/context.xml" />
+	                     <classes file="config/integration/logging.properties"/>
+	              </war>
+	       </target>
+       <target name="deployServerSideOnly" depends="build.jar">
+              <copy file="${destdir}/jarFiles/indexsearch.jar" tofile="${tomcatRootdir}/webapps/indexsearch/WEB_INF/lib/indexsearch.jar" overwrite="true" />
+       </target>
+
+       <target name="deployClientSideOnly">
+              <copy todir="${tomcatRootdir}/webapps/indexsearch">
+              <fileset dir="web">
+              <include name="*.*" />
+              <include name="*" />
+              <include name="*/*" />
+              <include name="*/*/*" />
+              </fileset>
+              </copy>
+       </target>
+
+           
+		
+		<target name="deployLocalPackage" depends="build.localdev.war">
+              <copy file="${destdir}/warFiles/${indexsearch}" tofile="${tomcatRootdir}/webapps/${indexsearch}" overwrite="true" />
+       </target>
+ 
+		
+		 
+
+</project>
+

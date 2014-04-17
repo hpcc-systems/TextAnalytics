@@ -1,0 +1,125 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<display-name>indexsearch</display-name>
+	<description>
+     Index Search
+  </description>
+
+<!-- CONFIGURE THESE PARAMTERS -->
+
+<!-- hpcc server where the indexes reside -->
+	<context-param>
+		<param-name>RoxieServerURL</param-name>
+		<param-value>http://192.168.56.101:8002/</param-value>
+	</context-param>
+					 
+<!-- how many search results per page to show -->					 
+	<context-param>
+		<description>The default number of search results to show</description>
+		<param-name>defaultSearchResultsPageSize</param-name>
+		<param-value>20</param-value>
+	</context-param>
+
+<!-- END CONFIGURE -->
+					
+	<context-param>
+		<description>The URL from which to get wildcards</description>
+		<param-name>wildcardUrl</param-name>
+		<param-value>WsEcl/submit/query/roxie/wsLookupWord?word=~D~word~D~</param-value>
+	</context-param>
+			<context-param> 
+			 		<param-name>EntityTypeQuery</param-name> 
+			 		<param-value>WsEcl/submit/query/roxie/wsEntityTypes?source_id=</param-value> 
+		</context-param> 
+		<context-param> 
+			 		<param-name>PhraseSearchQuery</param-name> 
+			 		<param-value>WsEcl/submit/query/roxie/wsAdHocSearch?view=xml</param-value> 
+		</context-param> 
+				<context-param> 
+			 		<param-name>SearchQuery</param-name> 
+			 		<param-value>WsEcl/submit/query/roxie/wsAdHocSearchSimple?view=xml</param-value> 
+		</context-param> 
+		
+
+	
+	
+
+	<servlet>
+		<servlet-name>SearchForm</servlet-name>
+		<servlet-class>org.hpcc.indexsearch.SearchAction</servlet-class>
+		<init-param>
+			<param-name>ShowForm</param-name>
+			<param-value>true</param-value>
+		</init-param>	
+		<init-param>
+			<param-name>FormName</param-name>
+			<param-value>/search.jsp</param-value>
+		</init-param>
+		
+	</servlet>
+		<servlet-mapping>
+		<servlet-name>SearchForm</servlet-name>
+		<url-pattern>/SearchForm</url-pattern>
+	</servlet-mapping>
+		<servlet>
+		<servlet-name>Search</servlet-name>
+		<servlet-class>org.hpcc.indexsearch.SearchAction</servlet-class>
+		<init-param>
+			<param-name>ShowForm</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SearchResultsStyleSheet</param-name>
+			<param-value>SearchResults.xsl</param-value>
+		</init-param>
+		<init-param>
+			<param-name>FormName</param-name>
+			<param-value>/search.jsp</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Search</servlet-name>
+		<url-pattern>/Search</url-pattern>
+	</servlet-mapping>
+	
+<!-- For developers running locally: if you are on the LN Network, add the xml described in 
+github circuits/documentation/tomcat ldap integration  to your tomcat server.xml file to log 
+into circuits with your ln network ID.  If you are not on the LN network, make sure you have the following
+in your tomcat/conf/tomcat-users.xml file so you can log in as test/test:
+  <role rolename="user"/>
+  <user username="test" password="test" roles="user"/>
+  if you are still having problems logging in,
+  to temporarily remove the login prompt, comment out the security constraint, login-config 
+  and security role below.
+  -->
+  <!-- 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Circuits</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>user</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+
+	
+	
+	<login-config><auth-method>BASIC</auth-method>
+		<realm-name>Circuit</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>user</role-name>
+	</security-role>
+	-->
+<!--end of login security-->
+
+	<welcome-file-list>     <welcome-file>index.html</welcome-file> </welcome-file-list>
+</web-app>
