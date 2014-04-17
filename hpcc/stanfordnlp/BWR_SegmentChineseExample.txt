@@ -1,0 +1,9 @@
+﻿import java;
+
+shared UNICODE Segment(UNICODE input)   := 
+    IMPORT(java,'org/hpcc/ECLStanfordSegmenter.segment:(Ljava/lang/String;)Ljava/lang/String;');
+
+UNICODE instr:=u'因为冰箱本身的设计寿命是十年左右，时间长了，肯定大部分零部件是要老化的/可怜';
+UNICODE outstr:=Segment(instr);
+output(instr);
+output(outstr);
