@@ -195,7 +195,7 @@ public class HpccGatePlugin  {
     // initialise the GATE library
 
 
-	  String plugindir=null;//C:/workspace/nlp/gateplugins";
+	  String plugindir="C:/temp/fromoldmachine/nlp/gateplugins";
 	  if (args.length > 0 && args[0] != null) {
 		  plugindir=args[0];
 	  }
